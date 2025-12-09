@@ -50,7 +50,7 @@ const CaseStudyDetail = () => {
     const fetchCaseStudy = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/case-studies/${slug}`);
+        const res = await fetch(`https://blog-backend-g3la.onrender.com/api/case-studies/${slug}`);
         if (res.ok) {
           const data = await res.json();
           setCaseStudy(data);
@@ -106,7 +106,7 @@ const CaseStudyDetail = () => {
     try {
       setLikeLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/case-studies/${slug}/like`,
+        `https://blog-backend-g3la.onrender.com/api/case-studies/${slug}/like`,
         {
           method: 'POST',
           headers: {
@@ -391,7 +391,7 @@ const CaseStudyDetail = () => {
                       </div>
                     </div>
                     <a
-                      href={`http://localhost:5000${doc.url}`}
+                      href={`https://blog-backend-g3la.onrender.com${doc.url}`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors"

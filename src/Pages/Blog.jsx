@@ -31,7 +31,7 @@ const Blog = () => {
         params.append('tag', selectedTag);
       }
 
-      const response = await fetch(`http://localhost:5000/api/blogs?${params}`);
+      const response = await fetch(`https://blog-backend-g3la.onrender.com/api/blogs?${params}`);
       const data = await response.json();
 
       if (response.ok) {

@@ -47,7 +47,7 @@ const BlogDetail = () => {
     const fetchBlog = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/blogs/${slug}`);
+        const res = await fetch(`https://blog-backend-g3la.onrender.com/api/blogs/${slug}`);
         
         if (res.ok) {
           const data = await res.json();
@@ -94,7 +94,7 @@ const BlogDetail = () => {
 
     try {
       setLikeLoading(true);
-      const res = await fetch(`http://localhost:5000/api/blogs/${slug}/like`, {
+      const res = await fetch(`https://blog-backend-g3la.onrender.com/api/blogs/${slug}/like`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -359,7 +359,7 @@ const BlogDetail = () => {
                     </div>
                   </div>
                   <a
-                    href={`http://localhost:5000${doc.url}`}
+                    href={`https://blog-backend-g3la.onrender.com${doc.url}`}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors"

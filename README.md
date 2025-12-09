@@ -101,7 +101,7 @@ Client/
 
 ## API Integration
 
-The client communicates with the backend server at `http://localhost:5000`:
+The client communicates with the backend server at `https://blog-backend-g3la.onrender.com`:
 
 - **Authentication**: `/api/auth/*` endpoints for login, register, profile updates
 - **User Data**: Profile information and user statistics
@@ -151,7 +151,7 @@ The client communicates with the backend server at `http://localhost:5000`:
 Create a `.env` file in the Client directory if needed:
 
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=https://blog-backend-g3la.onrender.com
 VITE_APP_NAME=Case Studies Blog
 ```
 

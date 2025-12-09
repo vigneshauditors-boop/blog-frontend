@@ -11,7 +11,7 @@ const WebApps = () => {
     const fetchCaseStudies = async () => {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/case-studies?category=web-apps&page=1&limit=12');
+        const res = await fetch('https://blog-backend-g3la.onrender.com/api/case-studies?category=web-apps&page=1&limit=12');
         const data = await res.json();
         if (res.ok) {
           setCaseStudies(data.caseStudies || []);

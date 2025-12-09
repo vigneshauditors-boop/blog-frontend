@@ -148,7 +148,7 @@ const CreateContent = () => {
         const fd = new FormData();
         fd.append('file', file);
 
-        const res = await fetch('http://localhost:5000/api/uploads/docs', {
+        const res = await fetch('https://blog-backend-g3la.onrender.com/api/uploads/docs', {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: fd
@@ -269,7 +269,7 @@ const CreateContent = () => {
       // Send category for both case studies and blogs (blogs use GST and related categories)
       const payload = formData;
 
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
+      const response = await fetch(`https://blog-backend-g3la.onrender.com${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -896,7 +896,7 @@ const CreateContent = () => {
                               {doc.originalName || doc.fileName}
                             </span>
                             <a
-                              href={`http://localhost:5000${doc.url}`}
+                              href={`https://blog-backend-g3la.onrender.com${doc.url}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-blue-600 hover:underline"

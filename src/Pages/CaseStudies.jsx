@@ -36,7 +36,7 @@ const CaseStudies = () => {
         params.append('tag', selectedTag);
       }
 
-      const response = await fetch(`http://localhost:5000/api/case-studies?${params}`);
+      const response = await fetch(`https://blog-backend-g3la.onrender.com/api/case-studies?${params}`);
       const data = await response.json();
 
       if (response.ok) {
