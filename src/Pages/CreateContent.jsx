@@ -56,7 +56,7 @@ const CreateContent = () => {
     title: '',
     description: '',
     content: '',
-    category: 'web-apps',
+    category: 'gst',
     tags: [],
     highlight: '',
     notes: '',
@@ -72,8 +72,8 @@ const CreateContent = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [docUploading, setDocUploading] = useState(false);
-  const [docError, setDocError] = useState('');
+  const [docLink, setDocLink] = useState('');
+  const [docLabel, setDocLabel] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
 
@@ -132,46 +132,21 @@ const CreateContent = () => {
     }));
   };
 
-  // documents
-  const handleDocsChange = async (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-
-    setDocUploading(true);
-    setDocError('');
-
-    try {
-      const token = localStorage.getItem('token');
-      const uploadedDocs = [];
-
-      for (const file of files) {
-        const fd = new FormData();
-        fd.append('file', file);
-
-        const res = await fetch('https://blog-backend-g3la.onrender.com/api/uploads/docs', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: fd
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.message || 'Failed to upload document');
+  // document links
+  const addDocumentLink = () => {
+    if (!docLink.trim()) return;
+    setFormData(prev => ({
+      ...prev,
+      documents: [
+        ...prev.documents,
+        {
+          url: docLink.trim(),
+          originalName: docLabel.trim() || 'Document'
         }
-        uploadedDocs.push(data.file);
-      }
-
-      setFormData(prev => ({
-        ...prev,
-        documents: [...prev.documents, ...uploadedDocs]
-      }));
-    } catch (err) {
-      console.error('Doc upload error:', err);
-      setDocError(err.message || 'Failed to upload documents');
-    } finally {
-      setDocUploading(false);
-      e.target.value = '';
-    }
+      ]
+    }));
+    setDocLink('');
+    setDocLabel('');
   };
 
   /* ---------- Editor helpers ---------- */
@@ -269,7 +244,7 @@ const CreateContent = () => {
       // Send category for both case studies and blogs (blogs use GST and related categories)
       const payload = formData;
 
-      const response = await fetch(`https://blog-backend-g3la.onrender.com${endpoint}`, {
+      const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -293,7 +268,7 @@ const CreateContent = () => {
           content: '',
           category:
             categories[contentType]?.[0]?.value ||
-            (contentType === 'case-study' ? 'web-apps' : 'gst'),
+            (contentType === 'case-study' ? 'gst' : 'gst'),
           tags: [],
           highlight: '',
           notes: '',
@@ -596,11 +571,18 @@ const CreateContent = () => {
                       className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
                     >
                       <span className="truncate mr-3">
-                        {doc.originalName || doc.fileName}
+                        {doc.originalName || doc.fileName || 'Document'}
                       </span>
-                      <span className="text-xs text-gray-500">
-                        (download from final page)
-                      </span>
+                      {doc.url && (
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          Open
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -865,25 +847,31 @@ const CreateContent = () => {
                   {/* Documents */}
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Attach Documents
+                      Document link (Drive/URL)
                     </label>
-                    <div className="flex items-center space-x-2">
-                      <label className="inline-flex items-center px-3 py-1.5 bg-gray-800 text-white rounded-md text-xs font-medium cursor-pointer hover:bg-gray-900">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        value={docLink}
+                        onChange={(e) => setDocLink(e.target.value)}
+                        placeholder="https://drive.google.com/..."
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <input
+                        type="text"
+                        value={docLabel}
+                        onChange={(e) => setDocLabel(e.target.value)}
+                        placeholder="Display name (optional)"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={addDocumentLink}
+                        className="inline-flex items-center justify-center px-3 py-2 bg-gray-900 text-white rounded-md text-xs font-semibold hover:bg-black"
+                      >
                         <Upload size={14} className="mr-1" />
-                        {docUploading ? 'Uploading...' : 'Upload'}
-                        <input
-                          type="file"
-                          multiple
-                          className="hidden"
-                          onChange={handleDocsChange}
-                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                        />
-                      </label>
-                      {docError && (
-                        <span className="text-[11px] text-red-600">
-                          {docError}
-                        </span>
-                      )}
+                        Add
+                      </button>
                     </div>
                     {formData.documents.length > 0 && (
                       <ul className="mt-2 space-y-1 text-[11px]">
@@ -893,16 +881,18 @@ const CreateContent = () => {
                             className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-2 py-1"
                           >
                             <span className="truncate mr-2">
-                              {doc.originalName || doc.fileName}
+                              {doc.originalName || doc.fileName || 'Document'}
                             </span>
-                            <a
-                              href={`https://blog-backend-g3la.onrender.com${doc.url}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              Download
-                            </a>
+                            {doc.url && (
+                              <a
+                                href={doc.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 hover:underline"
+                              >
+                                Download
+                              </a>
+                            )}
                           </li>
                         ))}
                       </ul>
